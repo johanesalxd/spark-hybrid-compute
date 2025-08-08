@@ -50,3 +50,13 @@ The notebook covers the following scenarios:
 ## Cleanup
 
 The final step in the notebook deletes the Dataproc cluster to prevent ongoing charges. Ensure you run this step after you have finished experimenting.
+
+## Architecture
+
+Below is a high-level architecture diagram of the solution.
+
+![Architecture Diagram](hybrid-compute.png)
+
+## Additional details
+
+TBA
