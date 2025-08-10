@@ -2,3 +2,5 @@
 *.py
 *.sh
 *.txt
+
+!temp/*
