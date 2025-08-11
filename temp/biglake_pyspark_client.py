@@ -102,7 +102,7 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 # JAR URLs for Iceberg and BigQuery integration
-ICEBERG_RUNTIME_JAR_URL = "https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.6.1/iceberg-spark-runtime-3.5_2.12-1.6.1.jar"
+ICEBERG_RUNTIME_JAR_URL = "https://storage-download.googleapis.com/maven-central/maven2/org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.6.1/iceberg-spark-runtime-3.5_2.12-1.6.1.jar"
 BIGQUERY_CATALOG_JAR_URL = "https://storage.googleapis.com/spark-lib/bigquery/iceberg-bigquery-catalog-1.6.1-1.0.1-beta.jar"
 
 
@@ -164,8 +164,8 @@ def get_config_from_env():
         'project_id': os.getenv('BIGLAKE_PROJECT_ID', 'my-project-id'),
         'region': os.getenv('BIGLAKE_REGION', 'us-central1'),
         'bucket_name': os.getenv('BIGLAKE_BUCKET', 'my-project-id-dataproc-bucket'),
-        'dataset': os.getenv('BIGLAKE_DATASET', 'my_iceberg_metastore'),
-        'catalog_name': os.getenv('BIGLAKE_CATALOG', 'iceberg_on_bq')
+        'dataset': os.getenv('BIGLAKE_DATASET', 'my_iceberg_rest_metastore'),
+        'catalog_name': os.getenv('BIGLAKE_CATALOG', 'iceberg_rest_on_bq')
     }
 
 
@@ -248,6 +248,7 @@ class BigLakePySparkClient:
 
         except Exception as e:
             logger.error(f"Failed to connect to BigLake Metastore: {e}")
+            sys.exit(1)
             raise
 
     def disconnect(self) -> None:
