@@ -9,6 +9,9 @@ on local machines or GCP GCE VMs.
 PREREQUISITES AND SETUP INSTRUCTIONS:
 =====================================
 
+0. Check permission required
+   gcloud asset search-all-iam-policies --scope="projects/my-project-id" --query="policy:admin@johanesa.altostrat.com" --format="value(policy.bindings.role)" | tr ';' '\n' | sort -u | grep -E "roles/storage.admin|roles/biglake.admin"
+
 1. JAVA INSTALLATION (Required):
    - Install Java 8 or 11 (Java 17+ may have compatibility issues)
 
@@ -75,6 +78,7 @@ This solution uses PySpark instead of PyIceberg because BigLake REST catalog req
 GoogleAuthManager class which is not available in PyIceberg.
 """
 
+import argparse
 import logging
 import os
 from pathlib import Path
@@ -478,13 +482,71 @@ class BigLakePySparkClient:
             logger.error(f"Failed to execute SQL: {e}")
             return None
 
+    def interactive_repl(self) -> None:
+        """
+        Start a Python REPL with pre-configured Spark session.
+        """
+        if not self.spark:
+            raise RuntimeError("Not connected. Call connect() first.")
+
+        import code
+
+        # Prepare the namespace for the REPL
+        namespace = {
+            'spark': self.spark,
+            'client': self,
+            'catalog_name': self.catalog_name,
+            'project_id': self.project_id,
+            'warehouse_path': self.warehouse_path,
+        }
+
+        # Add common imports
+        namespace.update({
+            'pyspark': __import__('pyspark'),
+            'SparkSession': self.spark.__class__,
+        })
+
+        # Print info before starting REPL
+        print(f"\nBigLake Spark session ready!")
+        print(f"Catalog: {self.catalog_name}")
+        print(f"Project: {self.project_id}")
+        print(f"Warehouse: {self.warehouse_path}")
+        print(f"\nAvailable variables: spark, client, catalog_name, project_id, warehouse_path")
+        print(f"Example: spark.sql(\"SELECT CURRENT_TIMESTAMP()\").show()")
+        print()
+
+        # Start the interactive Python console with minimal banner
+        code.interact(banner="", local=namespace)
+
+
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description='BigLake PySpark Client - Connect to BigLake Metastore using PySpark',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python biglake_pyspark_client.py                    # Run demo mode
+  python biglake_pyspark_client.py --interactive      # Start interactive Python REPL
+        """
+    )
+    parser.add_argument(
+        '--interactive',
+        action='store_true',
+        help='Start interactive SQL shell for running Spark SQL commands'
+    )
+    return parser.parse_args()
+
 
 def main():
     """
-    Main function demonstrating the BigLake PySpark client usage.
+    Main function for BigLake PySpark client.
 
+    Supports both demo mode and interactive SQL shell mode based on command line arguments.
     Configuration can be provided via environment variables or modified below.
     """
+    # Parse command line arguments
+    args = parse_arguments()
 
     # Get configuration from environment variables or use defaults
     config = get_config_from_env()
@@ -511,49 +573,54 @@ def main():
         print("=== Connecting to BigLake Metastore ===")
         client.connect()
 
-        # List namespaces
-        print("\n=== Listing Namespaces ===")
-        namespaces = client.list_namespaces()
+        if args.interactive:
+            # Start interactive Python REPL
+            client.interactive_repl()
+        else:
+            # Run demo mode (original functionality)
+            # List namespaces
+            print("\n=== Listing Namespaces ===")
+            namespaces = client.list_namespaces()
 
-        # If we have namespaces, explore them
-        if namespaces:
-            for namespace in namespaces:
-                print(f"\n=== Exploring Namespace: {namespace} ===")
+            # If we have namespaces, explore them
+            if namespaces:
+                for namespace in namespaces:
+                    print(f"\n=== Exploring Namespace: {namespace} ===")
 
-                # List tables in this namespace
-                tables = client.list_tables(namespace)
+                    # List tables in this namespace
+                    tables = client.list_tables(namespace)
 
-                # If we have tables, query the first one
-                if tables:
-                    table_name = tables[0]
+                    # If we have tables, query the first one
+                    if tables:
+                        table_name = tables[0]
 
-                    # Get table schema
-                    print(f"\n--- Schema for {namespace}.{table_name} ---")
-                    schema_info = client.get_table_schema(
-                        namespace, table_name)
+                        # Get table schema
+                        print(f"\n--- Schema for {namespace}.{table_name} ---")
+                        schema_info = client.get_table_schema(
+                            namespace, table_name)
 
-                    # Query table data
-                    print(f"\n--- Data from {namespace}.{table_name} ---")
-                    df = client.query_table(namespace, table_name, limit=5)
+                        # Query table data
+                        print(f"\n--- Data from {namespace}.{table_name} ---")
+                        df = client.query_table(namespace, table_name, limit=5)
+                        if df is not None:
+                            print(df.to_string())
+
+                        break  # Only process the first namespace with tables
+            else:
+                # Create a sample table for demonstration
+                print(f"\n=== Creating Sample Table ===")
+                success = client.create_sample_table(
+                    config['dataset'], "sample_people")
+                if success:
+                    print(f"\n--- Querying Sample Table ---")
+                    df = client.query_table(config['dataset'], "sample_people")
                     if df is not None:
                         print(df.to_string())
 
-                    break  # Only process the first namespace with tables
-        else:
-            # Create a sample table for demonstration
-            print(f"\n=== Creating Sample Table ===")
-            success = client.create_sample_table(
-                config['dataset'], "sample_people")
-            if success:
-                print(f"\n--- Querying Sample Table ---")
-                df = client.query_table(config['dataset'], "sample_people")
-                if df is not None:
-                    print(df.to_string())
-
-        print("\n=== BigLake PySpark Client Demo Complete ===")
+            print("\n=== BigLake PySpark Client Demo Complete ===")
 
     except Exception as e:
-        logger.error(f"Demo failed: {e}")
+        logger.error(f"Operation failed: {e}")
         print(f"\nError: {e}")
         print("\nTroubleshooting tips:")
         print("1. Ensure Java 8 or 11 is installed: java -version")
