@@ -1,6 +1,11 @@
-.venv/
 *.py
 *.sh
 *.txt
+*.yml
+*.json
+Dockerfile
+
+.venv/
+notebooks/*
 
 !temp/*
