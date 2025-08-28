@@ -18,31 +18,19 @@ gsutil mb -p ${PROJECT_ID} gs://${BUCKET_NAME} 2>/dev/null || echo "Bucket alrea
 
 # Upload job files
 echo "Uploading PyFlink job files..."
-gsutil cp ../jobs/word_count.py gs://${BUCKET_NAME}/jobs/
 gsutil cp ../jobs/csv_processor.py gs://${BUCKET_NAME}/jobs/
-gsutil cp ../jobs/requirements.txt gs://${BUCKET_NAME}/jobs/
 
 # Upload sample data
 echo "Uploading sample data files..."
-gsutil cp ../data/sample.txt gs://${BUCKET_NAME}/data/
 gsutil cp ../data/sample.csv gs://${BUCKET_NAME}/data/
 
-# Create Python dependencies archive if requirements.txt exists
-if [ -f "../jobs/requirements.txt" ]; then
-    echo "Creating Python dependencies archive..."
-    cd ../jobs
-    pip install -r requirements.txt --target ./deps --quiet
-    zip -r deps.zip deps/ > /dev/null
-    gsutil cp deps.zip gs://${BUCKET_NAME}/deps/
-    rm -rf deps/ deps.zip
-    cd ../submit
-fi
+# Note: No external dependencies needed - using only built-in PyFlink libraries
+echo "Note: No external dependencies needed - using built-in PyFlink and Hadoop GCS connector"
 
 echo "Upload completed successfully!"
 echo ""
 echo "Uploaded files:"
 echo "- Jobs: gs://${BUCKET_NAME}/jobs/"
 echo "- Data: gs://${BUCKET_NAME}/data/"
-echo "- Dependencies: gs://${BUCKET_NAME}/deps/"
 echo ""
 echo "You can now submit PyFlink jobs using submit-pyflink.sh"

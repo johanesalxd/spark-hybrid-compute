@@ -13,7 +13,7 @@ CLUSTER_NAME="${CLUSTER_NAME:-pyflink-demo-cluster}"
 BUCKET_NAME="${BUCKET_NAME:-${PROJECT_ID}-pyflink-demo}"
 
 # Job configuration
-JOB_TYPE="${1:-word_count}"  # word_count or csv_processor
+JOB_TYPE="${1:-csv_processor}"  # csv_processor
 JOB_NAME="pyflink-${JOB_TYPE}-$(date +%Y%m%d-%H%M%S)"
 
 echo "Submitting PyFlink job to DataProc via SSH..."
@@ -33,40 +33,19 @@ fi
 
 # Submit job based on type using SSH wrapper
 case ${JOB_TYPE} in
-    "word_count")
-        echo "Submitting Word Count job via SSH..."
-        gcloud compute ssh ${CLUSTER_NAME}-m \
-            --zone=${ZONE} \
-            --project=${PROJECT_ID} \
-            --command="
-                # Download the Python file from GCS to local filesystem
-                gsutil cp gs://${BUCKET_NAME}/jobs/word_count.py /tmp/word_count.py
-
-                # Submit the job using local file path
-                flink run -m yarn-cluster \
-                    -yD yarn.application.name='${JOB_NAME}' \
-                    -yD execution.runtime-mode=BATCH \
-                    -py /tmp/word_count.py \
-                    --input gs://${BUCKET_NAME}/data/sample.txt \
-                    --output gs://${BUCKET_NAME}/output/word_count/
-            "
-        ;;
-
     "csv_processor")
         echo "Submitting CSV Processor job via SSH..."
         gcloud compute ssh ${CLUSTER_NAME}-m \
             --zone=${ZONE} \
             --project=${PROJECT_ID} \
             --command="
-                # Download the Python file and dependencies from GCS
+                # Download the Python file from GCS to local filesystem
                 gsutil cp gs://${BUCKET_NAME}/jobs/csv_processor.py /tmp/csv_processor.py
-                gsutil cp gs://${BUCKET_NAME}/deps/deps.zip /tmp/deps.zip
 
-                # Submit the job using local file paths
+                # Submit the job using local file path (no external dependencies needed)
                 flink run -m yarn-cluster \
                     -yD yarn.application.name='${JOB_NAME}' \
                     -yD execution.runtime-mode=BATCH \
-                    -pyarch /tmp/deps.zip \
                     -py /tmp/csv_processor.py \
                     --input gs://${BUCKET_NAME}/data/sample.csv \
                     --output gs://${BUCKET_NAME}/output/csv_results/
@@ -75,10 +54,10 @@ case ${JOB_TYPE} in
 
     *)
         echo "Error: Unknown job type '${JOB_TYPE}'"
-        echo "Usage: $0 [word_count|csv_processor]"
+        echo "Usage: $0 [csv_processor]"
         echo ""
         echo "Examples:"
-        echo "  $0 word_count      # Submit word count job"
+        echo "  $0                 # Submit CSV processing job (default)"
         echo "  $0 csv_processor   # Submit CSV processing job"
         exit 1
         ;;

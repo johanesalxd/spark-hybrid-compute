@@ -26,8 +26,8 @@ def csv_processing_job(input_path: str, output_path: str):
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(2)
 
-    # Create table environment
-    settings = EnvironmentSettings.new_instance().in_streaming_mode().build()
+    # Create table environment in batch mode for aggregations
+    settings = EnvironmentSettings.new_instance().in_batch_mode().build()
     table_env = StreamTableEnvironment.create(env, settings)
 
     # Create source table for CSV input

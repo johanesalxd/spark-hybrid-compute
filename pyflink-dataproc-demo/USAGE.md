@@ -45,18 +45,18 @@ cd ../submit/
 This will:
 - Upload PyFlink job files to GCS
 - Upload sample data files
-- Create and upload Python dependencies archive
+- Note: No external dependencies needed - using built-in PyFlink libraries
 
-### 4. Submit PyFlink Jobs
+### 4. Submit PyFlink Job
 
 The demo uses SSH wrapper approach since `gcloud dataproc jobs submit flink` doesn't support PyFlink.
 
-#### Word Count Job
+#### CSV Processing Job
 ```bash
-./submit-pyflink.sh word_count
+./submit-pyflink.sh
 ```
 
-#### CSV Processing Job
+Or explicitly:
 ```bash
 ./submit-pyflink.sh csv_processor
 ```
@@ -89,9 +89,6 @@ gcloud compute ssh ${CLUSTER_NAME}-m --zone=${REGION}-a -- -L 8081:localhost:808
 ```bash
 # List output files
 gsutil ls gs://${BUCKET_NAME}/output/
-
-# View word count results
-gsutil cat gs://${BUCKET_NAME}/output/word_count/*
 
 # View CSV processing results
 gsutil cat gs://${BUCKET_NAME}/output/csv_results/*
@@ -171,9 +168,11 @@ Edit the job submission script to change input/output paths:
 
 ### Add New Dependencies
 
-1. Update `jobs/requirements.txt`
-2. Re-run `./upload-to-gcs.sh`
-3. Submit jobs with updated dependencies
+Since this demo uses only built-in PyFlink libraries, no external dependencies are needed. If you need to add custom dependencies in the future:
+
+1. Create a `jobs/requirements.txt` file with your dependencies
+2. Update the upload script to include dependency packaging
+3. Modify the job submission to include the dependency archive
 
 ### Scale Cluster
 

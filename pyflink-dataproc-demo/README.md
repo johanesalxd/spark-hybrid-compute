@@ -33,7 +33,7 @@ This demo addresses common questions about running PyFlink on Google Cloud DataP
 
 ## Demo Focus
 
-This demo focuses on **batch processing** using the **ephemeral cluster pattern** - the most common and cost-effective approach for PyFlink on DataProc.
+This demo focuses on **CSV processing** using PyFlink's Table API with the **ephemeral cluster pattern** - demonstrating batch processing capabilities on DataProc.
 
 For other deployment patterns (streaming, long-running clusters, interactive analysis), see **[DEPLOYMENT-PATTERNS.md](DEPLOYMENT-PATTERNS.md)**.
 
@@ -49,15 +49,12 @@ pyflink-dataproc-demo/
 │   ├── create-flink-cluster.sh       # Create DataProc with Flink
 │   └── delete-cluster.sh             # Cleanup script
 ├── jobs/
-│   ├── word_count.py                 # Simple PyFlink example
-│   ├── csv_processor.py              # CSV processing from GCS
-│   └── requirements.txt              # Runtime dependencies
+│   └── csv_processor.py              # CSV processing from GCS
 ├── submit/
 │   ├── submit-pyflink.sh             # SSH-based job submission
 │   └── upload-to-gcs.sh              # Upload jobs to GCS
 └── data/
-    ├── sample.csv                     # Sample CSV data
-    └── sample.txt                     # Sample text data
+    └── sample.csv                     # Sample CSV data
 ```
 
 ## Quick Start
@@ -111,6 +108,6 @@ pip install -r requirements.txt
 
 ## Next Steps
 
-1. Run the basic word count example
-2. Try the CSV processing job with your own data
-3. Customize the jobs for your specific use cases
+1. Try the CSV processing job with your own data
+2. Customize the job for your specific use cases
+3. Explore different deployment patterns in DEPLOYMENT-PATTERNS.md
