@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PyFlink CSV Processing Example for DataProc
+PyFlink CSV Processing Example for Dataproc
 
 This job demonstrates processing CSV data from GCS, performing transformations,
 and writing results back to GCS in different formats.
@@ -9,8 +9,10 @@ and writing results back to GCS in different formats.
 import argparse
 import logging
 import sys
+
 from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.table import StreamTableEnvironment, EnvironmentSettings
+from pyflink.table import EnvironmentSettings
+from pyflink.table import StreamTableEnvironment
 
 
 def csv_processing_job(input_path: str, output_path: str):
@@ -90,9 +92,9 @@ def main():
     """Main function to parse arguments and run the job."""
     parser = argparse.ArgumentParser(description='PyFlink CSV Processing Job')
     parser.add_argument('--input', required=True,
-                       help='Input GCS CSV path (e.g., gs://bucket/data.csv)')
+                        help='Input GCS CSV path (e.g., gs://bucket/data.csv)')
     parser.add_argument('--output', required=True,
-                       help='Output GCS path (e.g., gs://bucket/output/)')
+                        help='Output GCS path (e.g., gs://bucket/output/)')
 
     args = parser.parse_args()
 

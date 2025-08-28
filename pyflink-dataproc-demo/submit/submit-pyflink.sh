@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Submit PyFlink jobs to DataProc using SSH wrapper
+# Submit PyFlink jobs to Dataproc using SSH wrapper
 # This script uses the SSH approach since gcloud dataproc submit flink doesn't support PyFlink
 
 set -e
@@ -16,7 +16,7 @@ BUCKET_NAME="${BUCKET_NAME:-${PROJECT_ID}-pyflink-demo}"
 JOB_TYPE="${1:-csv_processor}"  # csv_processor
 JOB_NAME="pyflink-${JOB_TYPE}-$(date +%Y%m%d-%H%M%S)"
 
-echo "Submitting PyFlink job to DataProc via SSH..."
+echo "Submitting PyFlink job to Dataproc via SSH..."
 echo "Project: ${PROJECT_ID}"
 echo "Region: ${REGION}"
 echo "Zone: ${ZONE}"
@@ -81,6 +81,6 @@ echo "Check output in GCS:"
 echo "  gsutil ls gs://${BUCKET_NAME}/output/"
 echo ""
 echo "Access Flink Web UI:"
-echo "  # Via DataProc Component Gateway or port forwarding:"
+echo "  # Via Dataproc Component Gateway or port forwarding:"
 echo "  gcloud compute ssh ${CLUSTER_NAME}-m --zone=${ZONE} -- -L 8081:localhost:8081"
 echo "  # Then open http://localhost:8081 in your browser"

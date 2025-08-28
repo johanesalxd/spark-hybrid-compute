@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# PyFlink DataProc Cluster Creation Script
-# This script creates a DataProc cluster with Flink component enabled
+# PyFlink Dataproc Cluster Creation Script
+# This script creates a Dataproc cluster with Flink component enabled
 
 set -e
 
@@ -18,7 +18,7 @@ NUM_WORKERS=2
 DISK_SIZE="100GB"
 IMAGE_VERSION="2.2-debian12"
 
-echo "Creating PyFlink DataProc cluster..."
+echo "Creating PyFlink Dataproc cluster..."
 echo "Project: ${PROJECT_ID}"
 echo "Region: ${REGION}"
 echo "Cluster: ${CLUSTER_NAME}"
@@ -28,8 +28,8 @@ echo "Bucket: ${BUCKET_NAME}"
 echo "Creating GCS bucket if it doesn't exist..."
 gsutil mb -p ${PROJECT_ID} -l ${REGION} gs://${BUCKET_NAME} 2>/dev/null || echo "Bucket already exists or creation failed"
 
-# Create the DataProc cluster with Flink component
-echo "Creating DataProc cluster with Flink component..."
+# Create the Dataproc cluster with Flink component
+echo "Creating Dataproc cluster with Flink component..."
 gcloud dataproc clusters create ${CLUSTER_NAME} \
     --project=${PROJECT_ID} \
     --region=${REGION} \

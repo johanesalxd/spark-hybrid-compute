@@ -1,20 +1,20 @@
-# PyFlink on DataProc Demo
+# PyFlink on Dataproc Demo
 
-This demo addresses common questions about running PyFlink on Google Cloud DataProc and provides practical examples for deployment and job submission.
+This demo addresses common questions about running PyFlink on Google Cloud Dataproc and provides practical examples for deployment and job submission.
 
 ## Questions Answered
 
-### 1. **Major Issues with Running PyFlink on DataProc**
-- ✅ **No major issues**: DataProc officially supports Flink as an optional component since version 2.1+
+### 1. **Major Issues with Running PyFlink on Dataproc**
+- ✅ **No major issues**: Dataproc officially supports Flink as an optional component since version 2.1+
 - ✅ **Native integration**: Flink is pre-installed and configured when using `--optional-components=FLINK`
 - ✅ **YARN integration**: Works out of the box with proper resource management
 
-### 2. **Best YARN Submission Mode for DataProc**
-- ✅ **Per-job mode is recommended** for DataProc
+### 2. **Best YARN Submission Mode for Dataproc**
+- ✅ **Per-job mode is recommended** for Dataproc
 - Better resource isolation between jobs
 - Easier cleanup after job completion
 - More suitable for batch processing workloads
-- Aligns well with DataProc's ephemeral cluster model
+- Aligns well with Dataproc's ephemeral cluster model
 
 ### 3. **Packaging Dependencies for PyFlink**
 - ✅ **Use `requirements.txt`** for Python dependencies
@@ -33,7 +33,7 @@ This demo addresses common questions about running PyFlink on Google Cloud DataP
 
 ## Demo Focus
 
-This demo focuses on **CSV processing** using PyFlink's Table API with the **ephemeral cluster pattern** - demonstrating batch processing capabilities on DataProc.
+This demo focuses on **CSV processing** using PyFlink's Table API with the **ephemeral cluster pattern** - demonstrating batch processing capabilities on Dataproc.
 
 For other deployment patterns (streaming, long-running clusters, interactive analysis), see **[DEPLOYMENT-PATTERNS.md](DEPLOYMENT-PATTERNS.md)**.
 
@@ -46,7 +46,7 @@ pyflink-dataproc-demo/
 ├── USAGE.md                           # Step-by-step usage instructions
 ├── requirements.txt                   # Development dependencies
 ├── cluster/
-│   ├── create-flink-cluster.sh       # Create DataProc with Flink
+│   ├── create-flink-cluster.sh       # Create Dataproc with Flink
 │   └── delete-cluster.sh             # Cleanup script
 ├── jobs/
 │   └── csv_processor.py              # CSV processing from GCS
@@ -88,7 +88,7 @@ cd cluster/
 ## Prerequisites
 
 - Google Cloud SDK installed and configured
-- A GCP project with DataProc API enabled
+- A GCP project with Dataproc API enabled
 - A GCS bucket for storing jobs and data
 
 ## Development Setup
@@ -104,7 +104,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-**Note**: PyFlink is not included in the requirements as it's pre-installed on DataProc clusters. For local PyFlink development, you would need to install Apache Flink separately.
+**Note**: PyFlink is not included in the requirements as it's pre-installed on Dataproc clusters. For local PyFlink development, you would need to install Apache Flink separately.
 
 ## Next Steps
 

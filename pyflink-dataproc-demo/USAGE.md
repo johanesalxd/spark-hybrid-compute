@@ -1,11 +1,11 @@
-# PyFlink on DataProc - Usage Guide
+# PyFlink on Dataproc - Usage Guide
 
-This guide provides step-by-step instructions for running the PyFlink on DataProc demo.
+This guide provides step-by-step instructions for running the PyFlink on Dataproc demo.
 
 ## Prerequisites
 
 1. **Google Cloud SDK** installed and configured
-2. **GCP Project** with DataProc API enabled
+2. **GCP Project** with Dataproc API enabled
 3. **Billing** enabled on your GCP project
 4. **IAM Permissions**:
    - Dataproc Admin
@@ -23,7 +23,7 @@ export CLUSTER_NAME="pyflink-demo-cluster"
 export BUCKET_NAME="${PROJECT_ID}-pyflink-demo"
 ```
 
-### 2. Create DataProc Cluster with Flink
+### 2. Create Dataproc Cluster with Flink
 
 ```bash
 cd cluster/
@@ -32,7 +32,7 @@ cd cluster/
 
 This will:
 - Create a GCS bucket for the demo
-- Create a DataProc cluster with Flink component enabled
+- Create a Dataproc cluster with Flink component enabled
 - Configure YARN for optimal Flink performance
 
 ### 3. Upload Jobs and Data to GCS
@@ -121,7 +121,7 @@ The key is to use the SSH wrapper approach for PyFlink job submission within you
 
 1. **Cluster Creation Fails**
    - Check quotas in your GCP project
-   - Verify DataProc API is enabled
+   - Verify Dataproc API is enabled
    - Ensure you have sufficient IAM permissions
 
 2. **Job Submission Fails**
@@ -131,7 +131,7 @@ The key is to use the SSH wrapper approach for PyFlink job submission within you
 
 3. **PyFlink Import Errors**
    - These are expected in local development environment
-   - PyFlink is pre-installed on DataProc clusters with Flink component
+   - PyFlink is pre-installed on Dataproc clusters with Flink component
 
 4. **GCS Access Issues**
    - Verify bucket exists and you have access
