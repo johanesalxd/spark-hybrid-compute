@@ -1,0 +1,36 @@
+# PyFlink DataProc Demo - Development Dependencies
+# Install these for local development and testing
+
+# Core data processing libraries (for local development/testing)
+pandas>=1.3.0
+numpy>=1.21.0
+
+# Google Cloud libraries
+google-cloud-storage>=2.0.0
+google-cloud-bigquery>=3.0.0
+google-cloud-dataproc>=5.0.0
+
+# Airflow and Cloud Composer dependencies (for DAG development)
+apache-airflow>=2.7.0
+apache-airflow-providers-google>=10.10.1
+
+# Testing and development tools
+pytest>=7.0.0
+pytest-mock>=3.10.0
+
+# Code quality tools
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.0.0
+
+# Logging and monitoring
+structlog>=21.0.0
+
+# Optional: For custom serialization
+pyarrow>=5.0.0
+
+# Optional: For JSON processing
+jsonschema>=4.0.0
+
+# Note: PyFlink is not included here as it's pre-installed on DataProc clusters
+# For local PyFlink development, you would need to install Apache Flink separately
